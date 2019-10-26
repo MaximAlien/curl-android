@@ -69,8 +69,8 @@ sed -i.bak 's/install: all install_docs install_sw/install: install_docs install
 
 echo "Building openssl..."
 make depend
-sudo make -j4 SHLIB_VERSION_NUMBER= LIBVERSION= SHLIB_EXT=.so CALC_VERSIONS="SHLIB_COMPAT=; SHLIB_SOVER=" MAKE="make -e" all
-sudo make install 
+make -j4 SHLIB_VERSION_NUMBER= LIBVERSION= SHLIB_EXT=.so CALC_VERSIONS="SHLIB_COMPAT=; SHLIB_SOVER=" MAKE="make -e" all
+make install 
 
 # curl
 export LIBS="-lcrypto -lssl -lz"
