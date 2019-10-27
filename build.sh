@@ -41,14 +41,24 @@ export AS=$(pwd)/toolchain/bin/aarch64-linux-android-as
 export LD=$(pwd)/toolchain/bin/aarch64-linux-android-ld
 export RANLIB=$(pwd)/toolchain/bin/aarch64-linux-android-ranlib
 export NM=$(pwd)/toolchain/bin/aarch64-linux-android-nm
-export STRIP=$(pwd)/toolchain/bin/aarch64-linux-android-strip
+export STRIP=$(pwd)/toolchain/aarch64-linux-android/bin/strip
 
 # zlib
 echo "Configuring zlib"
 cd $ZLIB_DIR
-./configure
+sed -i '199d' CMakeLists.txt
+sed -i '189d' CMakeLists.txt
+mkdir build
+cd build
+cmake -DCMAKE_INSTALL_PREFIX=$ZLIB_DIR/build ..
 make
-make install
+sudo make install
+
+sudo $STRIP --strip-debug "$ZLIB_DIR/build/lib/libz.a"
+sudo $STRIP --strip-debug "$ZLIB_DIR/build/lib/libz.so"
+
+cp "$ZLIB_DIR/build/lib/libz.a" "$BUILD_DIR"
+cp "$ZLIB_DIR/build/lib/libz.so" "$BUILD_DIR"
 
 # openssl
 echo "Configuring openssl"
@@ -69,8 +79,18 @@ sed -i.bak 's/install: all install_docs install_sw/install: install_docs install
 
 echo "Building openssl..."
 make depend
-make -j4 SHLIB_VERSION_NUMBER= LIBVERSION= SHLIB_EXT=.so CALC_VERSIONS="SHLIB_COMPAT=; SHLIB_SOVER=" MAKE="make -e" all
-make install 
+sudo make -j4 SHLIB_VERSION_NUMBER= LIBVERSION= SHLIB_EXT=.so CALC_VERSIONS="SHLIB_COMPAT=; SHLIB_SOVER=" MAKE="make -e" all
+sudo make install
+
+$STRIP --strip-debug "$SSL_DIR/libcrypto.a"
+$STRIP --strip-debug "$SSL_DIR/libcrypto.so"
+$STRIP --strip-debug "$SSL_DIR/libssl.a"
+$STRIP --strip-debug "$SSL_DIR/libssl.so"
+
+cp "$SSL_DIR/libcrypto.a" "$BUILD_DIR"
+cp "$SSL_DIR/libcrypto.so" "$BUILD_DIR"
+cp "$SSL_DIR/libssl.a" "$BUILD_DIR"
+cp "$SSL_DIR/libssl.so" "$BUILD_DIR"
 
 # curl
 export LIBS="-lcrypto -lssl -lz"
@@ -96,7 +116,7 @@ sed -i.bak 's/^version_type=linux$/version_type=none/' libtool
 make -j4
 make install
 
-$STRIP --strip-all "$BUILD_DIR/libcurl.a"
-$STRIP --strip-all "$BUILD_DIR/libcurl.so"
+$STRIP --strip-debug "$BUILD_DIR/curl/arm64-v8a/lib/libcurl.a"
+$STRIP --strip-debug "$BUILD_DIR/curl/arm64-v8a/lib/libcurl.so"
 
 echo "Done"
