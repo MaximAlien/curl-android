@@ -5,7 +5,7 @@ $ sudo apt-get install autoconf
 
 Also make sure you have selected correct path to Android NDK.  
 
-openssl and crypto libraries/includes can be found in openssl folder.  
+openssl, crypto and libz libraries can be found in build folder.  
 curl libraries/includes can be found in build/curl/arm64-v8a folder.  
 
 To test .so library on Android device (for dynamically linked curl):  
