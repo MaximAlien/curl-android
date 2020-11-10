@@ -9,6 +9,7 @@ openssl, crypto and libz libraries can be found in build folder.
 curl libraries/includes can be found in build/curl/arm64-v8a folder.  
 
 To test .so library on Android device (for dynamically linked curl):  
+```bash
 $ cd test-app  
 $ ndk-build NDK_APPLICATION_MK=./jni/Application.mk  
 $ cd obj/local/arm64-v8a/  
@@ -20,8 +21,10 @@ $ adb shell
 $ cd /data/local/tmp/  
 $ export LD_LIBRARY_PATH=.  
 $ ./test.out  
+```
 
 Example output:  
+```bash
 $ ./test.out  
 Sending cURL request...
 *   Trying 172.217.168.228:443...
@@ -31,3 +34,4 @@ Sending cURL request...
 * Cipher selection: ALL:!EXPORT:!EXPORT40:!EXPORT56:!aNULL:!LOW:!RC4:@STRENGTH
 * SSL certificate problem: unable to get local issuer certificate
 * Closing connection 0
+```
